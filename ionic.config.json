@@ -1,5 +1,7 @@
 {
-  "name": "@WorkSBL",
-  "integrations": {},
+  "name": "WorkSBL",
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }

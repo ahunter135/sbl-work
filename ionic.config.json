@@ -1,9 +1,6 @@
 {
   "name": "WorkSBL",
   "integrations": {
-    "capacitor": {
-      "enabled": false
-    },
     "cordova": {
       "enabled": true
     }

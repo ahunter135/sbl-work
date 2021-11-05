@@ -1,0 +1,42 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title> Settings </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense" class="ion-no-border">
+    <ion-toolbar>
+      <ion-title size="large">Settings</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list>
+    <ion-list-header lines="none">
+      <ion-label>Account Email</ion-label>
+    </ion-list-header>
+    <ion-item lines="none">
+      <span class="label">Email</span>
+      <ion-note slot="end">ahunter8850@outlook.com</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header lines="none">
+      <ion-label>About</ion-label>
+    </ion-list-header>
+    <ion-item lines="none">
+      <span class="label">Version</span>
+      <ion-note slot="end">1.0 (1)</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header lines="none">
+      <ion-label>Logout</ion-label>
+    </ion-list-header>
+    <ion-item lines="none" (click)="logout()">
+      <span class="label" style="color: red">Logout</span>
+    </ion-item>
+  </ion-list>
+</ion-content>

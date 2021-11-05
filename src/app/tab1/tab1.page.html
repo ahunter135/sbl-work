@@ -1,0 +1,22 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title> Home </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense" class="ion-no-border">
+    <ion-toolbar>
+      <ion-title size="large">Home</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-list-header>
+    <h3>My Status</h3>
+  </ion-list-header>
+  <app-statuscard></app-statuscard>
+
+  <ion-list-header>
+    <h3>Tasks</h3>
+  </ion-list-header>
+  <app-taskcard></app-taskcard>
+</ion-content>

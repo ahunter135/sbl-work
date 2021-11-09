@@ -20,7 +20,6 @@ export class Tab1Page {
     } else {
       this.getAccountDetails();
     }
-    this.openTaskModal();
   }
 
   async presentLoginModal() {

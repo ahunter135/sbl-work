@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-taskcard',
@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./taskcard.component.scss'],
 })
 export class TaskcardComponent implements OnInit {
-
+  @Input() loading = false;
   constructor() { }
 
   ngOnInit() {}

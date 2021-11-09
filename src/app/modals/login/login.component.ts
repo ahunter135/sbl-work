@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-login',
@@ -7,13 +8,23 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-
-  constructor(private modalController: ModalController) { }
+  email = 'ahunter8850@outlook.com';
+  password = 'Test1234!';
+  constructor(private modalController: ModalController,
+    private api: ApiService) { }
 
   ngOnInit() {}
 
-  signIn() {
-    this.modalController.dismiss();
+  async signIn() {
+    const response = await this.api.post('Authentication/Login', {
+      email: this.email,
+      password: this.password
+    }) as any;
+
+    if (response.isAuthSuccessful) {
+      this.modalController.dismiss();
+      window.localStorage.setItem('loggedIn', 'true');
+    }
   }
 
 }

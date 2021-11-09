@@ -13,10 +13,14 @@
   <ion-list-header>
     <h3>My Status</h3>
   </ion-list-header>
-  <app-statuscard></app-statuscard>
+  <app-statuscard
+    [loading]="loading"
+    [statusDescription]="status.statusDescription"
+    [statusName]="status.statusName"
+  ></app-statuscard>
 
   <ion-list-header>
     <h3>Tasks</h3>
   </ion-list-header>
-  <app-taskcard></app-taskcard>
+  <app-taskcard [loading]="loading" (click)="openTaskModal()"></app-taskcard>
 </ion-content>

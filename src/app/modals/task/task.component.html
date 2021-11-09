@@ -1,0 +1,73 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start" *ngIf="state !== 1">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" color="primary" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" color="dark" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="taskPage" *ngIf="state === 1" [@slideOut]>
+    <h1>COVID Test</h1>
+    <br />
+    <h4>What was the result of your test?</h4>
+    <ion-list>
+      <ion-radio-group value="null">
+        <ion-item lines="none">
+          <ion-label>Positive</ion-label>
+          <ion-radio slot="end" mode="md" value="positive"></ion-radio>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-label>Negative</ion-label>
+          <ion-radio slot="end" mode="md" value="negative"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+  </div>
+  <div class="taskPage" *ngIf="state === 2" [@slideOutIn]>
+    <h1>Upload</h1>
+    <br />
+    <h4>Please take a picture of your results</h4>
+    <div class="photoBlock">
+      <div *ngIf="photoTaken === null">
+        <ion-icon color="dark" name="camera"></ion-icon>
+        <h5>
+          Upload a picture of your
+          <span style="font-weight: bold"
+            >SBL COVID-18 Antibody Rapid Test</span
+          >
+          Results.
+        </h5>
+        <ion-button fill="outline" expand="block" (click)="takePhoto()"
+          >Take Photo</ion-button
+        >
+      </div>
+      <div *ngIf="photoTaken !== null">
+        <img [src]="photoTaken" />
+        <ion-button fill="outline" expand="block" (click)="takePhoto()"
+          >Change Photo</ion-button
+        >
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button
+      expand="block"
+      color="dark"
+      (click)="submit()"
+      [disabled]="shouldBeDisabled()"
+    >
+      <span *ngIf="state === 1">Next</span>
+      <span *ngIf="state === 2">Submit</span>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

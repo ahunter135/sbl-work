@@ -1,0 +1,59 @@
+.taskPage {
+  color: black;
+  padding-left: 12px;
+  padding-right: 12px;
+
+  h1 {
+    font-weight: bold;
+  }
+
+  h3 {
+    margin-bottom: 15px;
+  }
+
+  ion-item {
+    margin-bottom: 12px;
+    border: 1px black solid;
+    border-radius: 10px;
+  }
+
+  ion-list {
+    background: #f3f3f3;
+  }
+}
+
+.photoBlock {
+  position: relative;
+  ion-icon {
+    padding-top: 15px;
+    font-size: 30px;
+    display: block;
+    margin: auto;
+  }
+
+  h5 {
+    text-align: center;
+  }
+
+  ion-button {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  background-color: white;
+  height: 450px;
+  border-radius: 8px;
+  padding-top: 15px;
+}
+
+ion-content {
+  --background: #f3f3f3;
+}
+
+ion-header ion-toolbar {
+  --background: #f3f3f3;
+}
+
+ion-footer ion-toolbar {
+  --background: #f3f3f3;
+}

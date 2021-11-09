@@ -1,6 +1,14 @@
 <ion-card>
-  <ion-card-header> <h5 class="status">Pending</h5> </ion-card-header>
-  <ion-card-content>
-    Please report your most recent test results to determine your status.
+  <ion-card-header *ngIf="!loading">
+    <h5 class="status">{{ statusName }}</h5>
+  </ion-card-header>
+  <ion-card-header *ngIf="loading">
+    <ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+  </ion-card-header>
+  <ion-card-content *ngIf="!loading">
+    {{ statusDescription }}
+  </ion-card-content>
+  <ion-card-content *ngIf="loading">
+    <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
   </ion-card-content>
 </ion-card>

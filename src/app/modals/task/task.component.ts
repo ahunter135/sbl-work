@@ -7,6 +7,8 @@ import {
   transition,
 } from '@angular/animations';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-task',
@@ -34,9 +36,13 @@ export class TaskComponent implements OnInit {
   photoTaken = null;
   constructor(public alertController: AlertController,
     public modalCtrl: ModalController,
-    private camera: Camera) { }
+    private camera: Camera,
+    private scanner: QRScanner,
+    private api: ApiService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.scanQR();
+  }
 
   close() {
     this.modalCtrl.dismiss();
@@ -98,4 +104,31 @@ export class TaskComponent implements OnInit {
     });
   }
 
+  async scanQR() {
+    this.scanner.prepare()
+    .then((status: QRScannerStatus) => {
+        if (status.authorized) {
+          const scanSub = this.scanner.scan().subscribe(async (text: string) => {
+            const response = await this.api.post('StatusHistory/CheckQrCode', {qrCode: text});
+
+            if (response) {
+              // responds true if allowed
+              // false if not
+            } else {
+              const alert = await this.alertController.create({
+                header: 'Invalid QR Code',
+                message: 'The QR Code you scanned is invalid or has already been used, please try again.',
+                buttons: ['Try again']
+              });
+
+              await alert.present();
+            }
+            this.scanner.hide();
+            scanSub.unsubscribe();
+          });
+        }
+      }
+    )
+    .catch((e: any) => console.log('Error'));
+  }
 }

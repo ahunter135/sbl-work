@@ -15,6 +15,9 @@
 <ion-content [fullscreen]="true">
   <div class="taskPage" *ngIf="state === 1" [@slideOut]>
     <h1>COVID Test</h1>
+  </div>
+  <div class="taskPage" *ngIf="state === 2" [@slideOut]>
+    <h1>COVID Test</h1>
     <br />
     <h4>What was the result of your test?</h4>
     <ion-list>
@@ -31,7 +34,7 @@
       </ion-radio-group>
     </ion-list>
   </div>
-  <div class="taskPage" *ngIf="state === 2" [@slideOutIn]>
+  <div class="taskPage" *ngIf="state === 3" [@slideOutIn]>
     <h1>Upload</h1>
     <br />
     <h4>Please take a picture of your results</h4>

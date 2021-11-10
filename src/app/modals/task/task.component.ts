@@ -7,7 +7,7 @@ import {
   transition,
 } from '@angular/animations';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -32,12 +32,12 @@ import { ApiService } from 'src/app/services/api.service';
   ]
 })
 export class TaskComponent implements OnInit {
-  state = 1;
+  state = 3;
   photoTaken = null;
   constructor(public alertController: AlertController,
     public modalCtrl: ModalController,
     private camera: Camera,
-    private scanner: QRScanner,
+    private scanner: BarcodeScanner,
     private api: ApiService) { }
 
   ngOnInit() {
@@ -53,7 +53,7 @@ export class TaskComponent implements OnInit {
   }
 
   async submit() {
-    if (this.state === 1) {
+    if (this.state === 2) {
       const alert = await this.alertController.create({
         header: 'Submit Test Result',
         message: 'By tapping submit, you are agreeing to share your reported test results with your employer',
@@ -63,9 +63,9 @@ export class TaskComponent implements OnInit {
       await alert.present();
       alert.onDidDismiss().then(() => {
         //Change pages
-        this.state = 2;
+        this.state = 3;
       });
-    } else if (this.state === 2) {
+    } else if (this.state === 3) {
       const alert = await this.alertController.create({
         header: 'Submit Proof',
         message: 'By tapping submit, you are agreeing to sharing your reported test results with your employer.',
@@ -101,34 +101,42 @@ export class TaskComponent implements OnInit {
      this.photoTaken = base64Image;
     }, (err) => {
      // Handle error
+     alert(JSON.stringify(err));
     });
   }
 
   async scanQR() {
-    this.scanner.prepare()
-    .then((status: QRScannerStatus) => {
-        if (status.authorized) {
-          const scanSub = this.scanner.scan().subscribe(async (text: string) => {
-            const response = await this.api.post('StatusHistory/CheckQrCode', {qrCode: text});
-
-            if (response) {
-              // responds true if allowed
-              // false if not
-            } else {
-              const alert = await this.alertController.create({
-                header: 'Invalid QR Code',
-                message: 'The QR Code you scanned is invalid or has already been used, please try again.',
-                buttons: ['Try again']
-              });
-
-              await alert.present();
-            }
-            this.scanner.hide();
-            scanSub.unsubscribe();
-          });
-        }
+    this.scanner.scan({
+      formats: 'QR_CODE',
+      prompt: 'Scan the QR Code on your SBL COVID-19 Rapid Antigen Test Kit'
+    }).then(async barcodeData => {
+      const data = barcodeData.text;
+      if (barcodeData.cancelled) {
+        this.modalCtrl.dismiss();
+        return;
       }
-    )
-    .catch((e: any) => console.log('Error'));
+      const response = await this.api.post('StatusHistory/CheckQrCode', {qrCode: data});
+
+      alert(JSON.stringify(response));
+      if (response.isSuccessful) {
+        // responds true if allowed
+        // false if not
+        this.state = 2;
+      } else {
+        const alert = await this.alertController.create({
+          header: 'Invalid QR Code',
+          message: 'The QR Code you scanned is invalid or has already been used, please try again.',
+          buttons: ['Try again']
+        });
+
+        alert.onDidDismiss().then(() => {
+          //Do Submit
+          this.scanQR();
+        });
+        await alert.present();
+      }
+     }).catch(err => {
+         console.log('Error', err);
+     });
   }
 }

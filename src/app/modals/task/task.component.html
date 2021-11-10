@@ -69,8 +69,8 @@
       (click)="submit()"
       [disabled]="shouldBeDisabled()"
     >
-      <span *ngIf="state === 1">Next</span>
-      <span *ngIf="state === 2">Submit</span>
+      <span *ngIf="state !== 3">Next</span>
+      <span *ngIf="state === 3">Submit</span>
     </ion-button>
   </ion-toolbar>
 </ion-footer>

@@ -21,26 +21,39 @@ export class ApiService {
   }
 
   async post(endpoint, data) {
-    const url = this.baseUrl + endpoint;
+    try {
+      const url = this.baseUrl + endpoint;
 
-    const response = await this.http.post(url, data, {
-      headers: new HttpHeaders().set('content-type', 'application/json').set('Authorization', this.accessToken ? ('Bearer ' + this.accessToken) : '')
-    }).toPromise() as any;
+      const response = await this.http.post(url, data, {
+        headers: new HttpHeaders().set('content-type', 'application/json').set('Authorization', this.accessToken ? ('Bearer ' + this.accessToken) : '')
+      }).toPromise() as any;
 
-    console.log(response);
 
-    if (response.isAuthSuccessful) {
-      this.accessToken = response.accessToken;
-      this.refreshToken = response.refreshToken;
-      window.localStorage.setItem('tokens', JSON.stringify({
-        accessToken: this.accessToken,
-        refreshToken: this.refreshToken
-      }));
-    } else {
-      // Failed Try Again
+      if (response.isAuthSuccessful) {
+        this.accessToken = response.accessToken;
+        this.refreshToken = response.refreshToken;
+        window.localStorage.setItem('tokens', JSON.stringify({
+          accessToken: this.accessToken,
+          refreshToken: this.refreshToken
+        }));
+      } else {
+        // Failed Try Again
+      }
+
+      return response;
+    } catch(error) {
+      if (error.status === 401) {
+        if (this.retries < 3) {
+          this.retries++;
+          return this.post(endpoint, data);
+        } else {
+          this.clearAndReset();
+          return null;
+        }
+      } else {
+        return error;
+      }
     }
-
-    return response;
   }
 
   async get(endpoint) {
@@ -61,6 +74,8 @@ export class ApiService {
           this.clearAndReset();
           return null;
         }
+      } else {
+        return error;
       }
     }
   }

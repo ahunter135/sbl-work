@@ -12,7 +12,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import * as moment from 'moment';
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
@@ -35,7 +35,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   ]
 })
 export class TaskComponent implements OnInit {
-  state = 3;
+  state = 1;
   photoTaken = null;
   basePhoto = null;
   positive = null;
@@ -50,7 +50,7 @@ export class TaskComponent implements OnInit {
     private sanitization: DomSanitizer) { }
 
   ngOnInit() {
-    //this.scanQR();
+    this.scanQR();
   }
 
   close() {
@@ -143,8 +143,6 @@ export class TaskComponent implements OnInit {
         });
 
         alert.onDidDismiss().then(() => {
-          //Do Submit
-          //this.state = 2;
           this.scanQR();
         });
         await alert.present();
@@ -177,7 +175,7 @@ export class TaskComponent implements OnInit {
     
           await alert.present();
           alert.onDidDismiss().then(() => {
-            //Do Submit
+            window.localStorage.setItem("task", moment().toISOString())
             this.modalCtrl.dismiss();
           });
         }
@@ -191,7 +189,6 @@ export class TaskComponent implements OnInit {
   
         await alert.present();
         alert.onDidDismiss().then(() => {
-          //Do Submit
           this.modalCtrl.dismiss();
         });
       })  
@@ -204,7 +201,7 @@ export class TaskComponent implements OnInit {
 
       await alert.present();
       alert.onDidDismiss().then(() => {
-        //Do Submit
+        
         this.modalCtrl.dismiss();
       });
     }

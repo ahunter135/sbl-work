@@ -6,9 +6,11 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./taskcard.component.scss'],
 })
 export class TaskcardComponent implements OnInit {
-  @Input() loading = false;
+  @Input() loading: boolean;
+  @Input() complete: boolean;
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
 }

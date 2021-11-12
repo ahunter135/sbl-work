@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import * as moment from 'moment';
 import { LoginComponent } from '../modals/login/login.component';
 import { TaskComponent } from '../modals/task/task.component';
 import { ApiService } from '../services/api.service';
@@ -12,6 +13,7 @@ import { ApiService } from '../services/api.service';
 export class Tab1Page {
   status = {} as any;
   loading = false;
+  complete = false;
   constructor(private modalController: ModalController, private api: ApiService) {}
 
   ionViewWillEnter() {
@@ -19,6 +21,14 @@ export class Tab1Page {
       this.presentLoginModal();
     } else {
       this.getAccountDetails();
+    }
+    if (window.localStorage.getItem('task') !== null) {
+      let lastTaskDate = moment(window.localStorage.getItem('task'));
+      if (moment().isSame(lastTaskDate, 'day')) {
+        this.complete = true;
+      } else {
+        this.complete = false;
+      }
     }
   }
 
@@ -50,10 +60,19 @@ export class Tab1Page {
   }
 
   async openTaskModal() {
+    if (this.complete) return;
     const modal = await this.modalController.create({
       component: TaskComponent
     });
     modal.onDidDismiss().then(() => {
+      if (window.localStorage.getItem('task') !== null) {
+        let lastTaskDate = moment(window.localStorage.getItem('task'));
+        if (moment().isSame(lastTaskDate, 'day')) {
+          this.complete = true;
+        } else {
+          this.complete = false;
+        }
+      }
     });
 
     return await modal.present();

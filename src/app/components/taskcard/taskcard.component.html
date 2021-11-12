@@ -1,4 +1,4 @@
-<ion-card>
+<ion-card *ngIf="!complete">
   <ion-card-header>
     <h6 class="status">Required Task</h6>
   </ion-card-header>
@@ -7,5 +7,15 @@
     your eligibility for attending work.
     <br />
     <h6 class="task">Start</h6>
+  </ion-card-content>
+</ion-card>
+<ion-card *ngIf="complete">
+  <ion-card-header>
+    <h6 class="status">Required Task</h6>
+  </ion-card-header>
+  <ion-card-content>
+    Thank you for reporting your results! This helps maintain a safe and healthy workspace.
+    <br />
+    <h6 class="task-complete">Completed</h6>
   </ion-card-content>
 </ion-card>

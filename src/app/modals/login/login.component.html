@@ -1,15 +1,29 @@
-<div class="loginPage">
+<div class="loginPage" *ngIf="!showForgotPassword">
+  <div class="loginImage">
+    <img src="../../../assets/images/logo.png" />
+  </div>
   <h3>Sign into @Work</h3>
   <ion-item>
     <ion-label position="stacked">Email</ion-label>
-    <ion-input type="email" placeholder="Enter your email"></ion-input>
+    <ion-input type="email" placeholder="Enter your email" [(ngModel)]="email" ngDefaultControl></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="stacked">Password</ion-label>
-    <ion-input type="password" placeholder="Enter your password"></ion-input>
+    <ion-input type="password" placeholder="Enter your password" [(ngModel)]="password" ngDefaultControl></ion-input>
   </ion-item>
-  <ion-button expand="block" class="loginBtn" (click)="signIn()"
-    >Sign In</ion-button
-  >
-  <p>Version 1.0 (1)</p>
+  <ion-button expand="block" class="loginBtn" (click)="signIn()">Sign In</ion-button>
+  <p (click)="showForgotPassword = true">Forgot Password?</p>
+</div>
+
+<div class="loginPage" *ngIf="showForgotPassword">
+
+  <h3>Reset Password</h3>
+  <ion-item>
+    <ion-label position="stacked">Email</ion-label>
+    <ion-input type="email" placeholder="Enter your email" [(ngModel)]="email" ngDefaultControl></ion-input>
+  </ion-item>
+  <ion-button expand="block" class="loginBtn" (click)="reset()">Reset</ion-button>
+  <ion-button color="light" (click)="showForgotPassword = false" class="resetBtn">
+    Cancel</ion-button>
+
 </div>

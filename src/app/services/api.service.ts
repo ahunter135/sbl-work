@@ -28,7 +28,9 @@ export class ApiService {
         headers: new HttpHeaders().set('content-type', 'application/json').set('Authorization', this.accessToken ? ('Bearer ' + this.accessToken) : '')
       }).toPromise() as any;
 
-
+      if (response == null) {
+        return response;
+      }
       if (response.isAuthSuccessful) {
         this.accessToken = response.accessToken;
         this.refreshToken = response.refreshToken;

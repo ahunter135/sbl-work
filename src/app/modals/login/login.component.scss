@@ -13,8 +13,25 @@
     font-size: small;
     color: gray;
   }
+
+  h3 {
+    color: black;
+    padding-bottom: 10px;
+  }
 }
 
+.loginImage {
+  img {
+    display: block;
+    margin:auto;
+  }
+}
+
+.resetBtn {
+  display: block;
+  margin:auto;
+  width: 33%;
+}
 .loginBtn {
   --color: white;
   --background: orange;

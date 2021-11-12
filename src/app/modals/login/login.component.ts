@@ -8,8 +8,9 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  email = 'ahunter8850@outlook.com';
-  password = 'Test1234!';
+  email = <any>'';
+  password = <any>'';
+  showForgotPassword = false;
   constructor(private modalController: ModalController,
     private api: ApiService) { }
 
@@ -24,7 +25,23 @@ export class LoginComponent implements OnInit {
     if (response.isAuthSuccessful) {
       this.modalController.dismiss();
       window.localStorage.setItem('loggedIn', 'true');
+    } else {
+      alert("Something went wrong, try again.")
     }
+  }
+
+  async reset() {
+    const response = await this.api.post('Authentication/ForgotPassword', {
+      email: this.email
+    }) as any;
+
+    if (response == null) {
+      alert("Reset email sent!");
+      this.showForgotPassword = false;
+    }
+    else if (response.status == 400) {
+      alert("Something went wrong, try again.")
+    } 
   }
 
 }

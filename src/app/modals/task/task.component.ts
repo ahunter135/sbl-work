@@ -9,6 +9,9 @@ import {
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { ApiService } from 'src/app/services/api.service';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { Base64 } from '@ionic-native/base64/ngx';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-task',
@@ -34,18 +37,27 @@ import { ApiService } from 'src/app/services/api.service';
 export class TaskComponent implements OnInit {
   state = 3;
   photoTaken = null;
+  basePhoto = null;
+  positive = null;
+  qrCode = '';
   constructor(public alertController: AlertController,
     public modalCtrl: ModalController,
     private camera: Camera,
     private scanner: BarcodeScanner,
-    private api: ApiService) { }
+    private api: ApiService,
+    private fileTransfer: FileTransfer,
+    private base: Base64,
+    private sanitization: DomSanitizer) { }
 
   ngOnInit() {
-    this.scanQR();
+    //this.scanQR();
   }
 
   close() {
     this.modalCtrl.dismiss();
+  }
+  radioChanged(event) {
+    this.positive = parseInt(event.detail.value);
   }
 
   goBack() {
@@ -63,6 +75,7 @@ export class TaskComponent implements OnInit {
       await alert.present();
       alert.onDidDismiss().then(() => {
         //Change pages
+        this.api.post('StatusHistory', {statusId: this.positive, qrCode: this.qrCode})
         this.state = 3;
       });
     } else if (this.state === 3) {
@@ -75,34 +88,34 @@ export class TaskComponent implements OnInit {
       await alert.present();
       alert.onDidDismiss().then(() => {
         //Do Submit
-        this.modalCtrl.dismiss();
+        this.upload(this.photoTaken, this.api.baseUrl + 'StatusHistory/UploadTestResult')
       });
     }
   }
 
   shouldBeDisabled() {
-    return false;
+    if (this.state == 2) {
+      return this.positive == null;
+    } else {
+      return this.photoTaken == null;
+    }
   }
 
   async takePhoto() {
-    const options: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.PNG,
-      sourceType: this.camera.PictureSourceType.CAMERA,
-      allowEdit: false,
-      saveToPhotoAlbum: false
-    };
-
-    this.camera.getPicture(options).then((imageData) => {
-     // imageData is either a base64 encoded string or a file URI
-     // If it's base64 (DATA_URL):
-     const base64Image = 'data:image/jpeg;base64,' + imageData;
-     this.photoTaken = base64Image;
-    }, (err) => {
-     // Handle error
-     alert(JSON.stringify(err));
-    });
+      const options: CameraOptions = {
+        destinationType: this.camera.DestinationType.FILE_URI,
+        sourceType: this.camera.PictureSourceType.CAMERA
+      };
+  
+      this.camera.getPicture(options).then(async (imageData) => {
+       this.photoTaken = imageData;   
+       this.basePhoto = await this.base.encodeFile(imageData); 
+       this.basePhoto = this.sanitization.bypassSecurityTrustUrl(this.basePhoto); 
+      }, (err) => {
+       // Handle error
+       alert(JSON.stringify(err));
+      });
+    
   }
 
   async scanQR() {
@@ -117,10 +130,10 @@ export class TaskComponent implements OnInit {
       }
       const response = await this.api.post('StatusHistory/CheckQrCode', {qrCode: data});
 
-      alert(JSON.stringify(response));
       if (response.isSuccessful) {
         // responds true if allowed
         // false if not
+        this.qrCode = data;
         this.state = 2;
       } else {
         const alert = await this.alertController.create({
@@ -131,6 +144,7 @@ export class TaskComponent implements OnInit {
 
         alert.onDidDismiss().then(() => {
           //Do Submit
+          //this.state = 2;
           this.scanQR();
         });
         await alert.present();
@@ -138,5 +152,62 @@ export class TaskComponent implements OnInit {
      }).catch(err => {
          console.log('Error', err);
      });
+  }
+
+  async upload(path, endpoint) {
+    try {
+      const file = this.fileTransfer.create();
+      let options: FileUploadOptions = {
+        fileKey: 'file',
+        fileName: 'results.jpg',
+        headers: {
+          'Authorization': this.api.accessToken ? ('Bearer ' + this.api.accessToken) : ''
+        }
+      }
+    
+      file.upload(path, endpoint, options)
+      .then(async (data) => {
+        // success
+        if (data.responseCode == 200) {
+          const alert = await this.alertController.create({
+            header: 'Success',
+            message: 'Thank you for submitting your results!',
+            buttons: ['Done']
+          });
+    
+          await alert.present();
+          alert.onDidDismiss().then(() => {
+            //Do Submit
+            this.modalCtrl.dismiss();
+          });
+        }
+      }, async (err) => {
+        // error
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: 'Something went wrong...',
+          buttons: ['Done']
+        });
+  
+        await alert.present();
+        alert.onDidDismiss().then(() => {
+          //Do Submit
+          this.modalCtrl.dismiss();
+        });
+      })  
+    } catch (error) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Something went wrong...',
+        buttons: ['Done']
+      });
+
+      await alert.present();
+      alert.onDidDismiss().then(() => {
+        //Do Submit
+        this.modalCtrl.dismiss();
+      });
+    }
+    
   }
 }

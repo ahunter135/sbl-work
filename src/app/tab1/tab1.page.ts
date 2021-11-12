@@ -24,7 +24,8 @@ export class Tab1Page {
 
   async presentLoginModal() {
       const modal = await this.modalController.create({
-        component: LoginComponent
+        component: LoginComponent,
+        backdropDismiss: false
       });
       modal.onDidDismiss().then(() => {
         this.getAccountDetails();

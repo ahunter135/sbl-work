@@ -98,7 +98,15 @@
       "cordova-plugin-file": {},
       "cordova-plugin-camera": {},
       "cordova-plugin-androidx": {},
-      "cordova-plugin-androidx-adapter": {}
+      "cordova-plugin-androidx-adapter": {},
+      "cordova-plugin-ionic": {
+        "APP_ID": "96ab8443",
+        "CHANNEL_NAME": "Production",
+        "UPDATE_METHOD": "background",
+        "UPDATE_API": "https://api.ionicjs.com",
+        "MAX_STORE": "2",
+        "MIN_BACKGROUND_DURATION": "30"
+      }
     },
     "platforms": [
       "android"

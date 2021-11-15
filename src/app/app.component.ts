@@ -8,7 +8,7 @@ import { Deploy } from 'cordova-plugin-ionic/dist/ngx';
 })
 export class AppComponent {
   constructor(private deploy: Deploy) {
-    this.performAutomaticUpdate();
+    //this.performAutomaticUpdate();
   }
 
   async performAutomaticUpdate() {

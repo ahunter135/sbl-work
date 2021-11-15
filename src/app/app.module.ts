@@ -15,12 +15,13 @@ import { LoginComponent } from './modals/login/login.component';
 import { TaskComponent } from './modals/task/task.component';
 import { FormsModule } from '@angular/forms';
 import { ComponentsModule } from './components/components.module';
+import { Deploy } from 'cordova-plugin-ionic/dist/ngx';
 
 @NgModule({
   declarations: [AppComponent, TaskComponent, LoginComponent],
   entryComponents: [],
   imports: [BrowserModule, BrowserAnimationsModule, IonicModule.forRoot({mode: 'ios'}), AppRoutingModule, HttpClientModule, FormsModule, ComponentsModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, Camera, BarcodeScanner, FileTransfer, Base64],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, Camera, BarcodeScanner, FileTransfer, Base64, Deploy],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

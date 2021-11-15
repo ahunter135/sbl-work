@@ -121,7 +121,8 @@ export class TaskComponent implements OnInit {
   async scanQR() {
     this.scanner.scan({
       formats: 'QR_CODE',
-      prompt: 'Scan the QR Code on your SBL COVID-19 Rapid Antigen Test Kit'
+      prompt: 'Scan the QR Code on your Rapid Antigen Test Kit',
+      resultDisplayDuration: 0
     }).then(async barcodeData => {
       const data = barcodeData.text;
       if (barcodeData.cancelled) {

@@ -18,15 +18,12 @@ export class AppComponent {
         console.log(`Update is ${percentDone}% done!`);
       });
       if (!currentVersion || currentVersion.versionId !== resp.versionId){
-        alert('updating');
         // We found an update, and are in process of redirecting you since you put auto!
       }else{
         // No update available
-        alert('no update');
       }
     } catch (err) {
       // We encountered an error.
-      alert(err);
     }
    }
 

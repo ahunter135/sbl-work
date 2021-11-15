@@ -17,16 +17,19 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   async signIn() {
+    if (this.email.length == 0) alert("Please enter a valid email");
+    else if (this.password.length == 0) alert("Please enter a valid password");
     const response = await this.api.post('Authentication/Login', {
       email: this.email,
       password: this.password
     }) as any;
-
-    if (response.isAuthSuccessful) {
+    if (response && response.isAuthSuccessful) {
       this.modalController.dismiss();
       window.localStorage.setItem('loggedIn', 'true');
+    } else if (response && response.error.errorMessage) {
+        alert(response.error.errorMessage);
     } else {
-      alert("Something went wrong, try again.")
+      alert("Please enter a valid email/password");
     }
   }
 
